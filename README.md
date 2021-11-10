@@ -142,7 +142,7 @@ class GeneratorController extends GeneratorController
             "version"               : "1.0.0",
             "source"                : {
                 "type"                  : "git",
-                "reference"             : "main",
+                "reference"             : "master",
                 "url"                   : "https://github.com/andy87/yii2-generator"
             },
             "autoload": {
