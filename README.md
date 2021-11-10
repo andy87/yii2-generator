@@ -94,8 +94,9 @@ class GeneratorController extends GeneratorController
     }
 ```  
   
-#### generateCrud( *string* $modelClass, *string* $controllerClass, *string* $viewPath, *string* $baseControllerClass ): void
+#### generateCrud( *string* $modelClass, *string* $searchModelClass, *string* $controllerClass, *string* $viewPath, *string* $baseControllerClass ): void
 * *string* **$modelClass** - **обязательный**, имя класса/модели для которого генерируется CRUD
+* *string* **$searchModelClass** - **обязательный**, полный путь класса для модели реализующей поиск сущностей в таблице
 * *string* **$controllerClass** - **обязательный**, полный путь класса для генерируемого контроллера
 * *string* **$viewPath** - **обязательный**, путь для генерирования шаблонов
 * *string* **$baseControllerClass** - ***необязательный***, полный путь родительского класса для генерируемого контроллера
@@ -112,6 +113,7 @@ class GeneratorController extends GeneratorController
 
             $this->generateCrud(
                 "common\\models\\{$tableNameCamelCase}",
+                "common\\models\\search\\{$tableNameCamelCase}Search",
                 "backend\\controllers\\{$tableNameCamelCase}Controller",
                 "@backend/views/{$tableNameKebabCase}"
             );

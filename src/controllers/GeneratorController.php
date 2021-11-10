@@ -52,6 +52,7 @@ abstract class GeneratorController extends Controller
      * Генерация крудов
      *
      * @param string $modelClass  Имя класса/модели для которого генерируется CRUD
+     * @param string $searchModelClass Полный путь класса для модели реализующей поиск сущностей в таблице
      * @param string $controllerClass Полный путь класса для генерируемого контроллера
      * @param string $viewPath путь для генерирования шаблонов
      * @param string $baseControllerClass Полный путь Родительского класса для генерируемого
@@ -60,6 +61,7 @@ abstract class GeneratorController extends Controller
      */
     protected function generateCrud(
         string $modelClass,
+        string $searchModelClass,
         string $controllerClass,
         string $viewPath,
         string $baseControllerClass = self::DEFAULT_CRUD_BASE_CONTROLLER
@@ -69,6 +71,7 @@ abstract class GeneratorController extends Controller
         $generator = Yii::createObject(['class' => GeneratorCrud::class ]);
 
         $generator->modelClass = $modelClass;
+        $generator->searchModelClass = $searchModelClass;
         $generator->controllerClass = $controllerClass;
         $generator->viewPath = $viewPath;
         $generator->baseControllerClass = $baseControllerClass;
