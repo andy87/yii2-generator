@@ -148,7 +148,7 @@ class GeneratorController extends GeneratorController
             "autoload": {
                 "psr-4": {
                     "andy87\\yii2_generator\\" : "src",
-                    "andy87\\yii2_generator\\controllers\\" : "src/controllers",
+                    "andy87\\yii2_generator\\controllers\\" : "src/controllers"
                 }
             }
         }
