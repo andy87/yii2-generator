@@ -49,14 +49,14 @@ class GeneratorController extends andy87\yii2_generator\controller\GeneratorCont
     }
 }
 ```
-далее в консоле выполняются комманды:
+далее в консоле выполняются команды:
 * php yii generator/models
 * php yii generator/crud
 
 
 
 # Использование.
-Создаётся контрогллер для выполнения консольных команд, который наследуется от `andy87\yii2_generator\controller\GeneratorController`.
+Создаётся контроллер для выполнения консольных команд, который наследуется от `andy87\yii2_generator\controller\GeneratorController`.
 
 ```php
 use andy87\yii2_generator\controller\GeneratorController;
@@ -73,11 +73,11 @@ class GeneratorController extends GeneratorController
  * *string* **DEFAULT_CRUD_BASE_CONTROLLER** - Полный путь родительского класса для генерируемого CRUD контроллера используемого по умолчанию (по умолчанию: yii\web\Controller )
 
  
-в контроллере создаются `actions` которые вызывают методы:
-* `processModel()`
-* `processCrud()`  
+в контроллере создаются `actions`, которые вызывают методы:
+* `generateModel()`
+* `generateCrud()`  
   
-#### processModel( *string* $ns, *string* $tableName, *?string* $modelClass = null ): void
+#### generateModel( *string* $ns, *string* $tableName, *?string* $modelClass = null ): void
 * *string* **$ns** - **обязательный**, `namespace` модели
 * *string* **$tableName** - **обязательный**, имя таблицы для которой создаётся модель
 * *?string* **$modelClass** - ***необязательный***, имя создаваемой модели
@@ -94,7 +94,7 @@ class GeneratorController extends GeneratorController
     }
 ```  
   
-#### processCrud( *string* $modelClass, *string* $controllerClass, *string* $viewPath, *string* $baseControllerClass ): void
+#### generateCrud( *string* $modelClass, *string* $controllerClass, *string* $viewPath, *string* $baseControllerClass ): void
 * *string* **$modelClass** - **обязательный**, имя класса/модели для которого генерируется CRUD
 * *string* **$controllerClass** - **обязательный**, полный путь класса для генерируемого контроллера
 * *string* **$viewPath** - **обязательный**, путь для генерирования шаблонов
