@@ -7,7 +7,7 @@
   },
   "name"        : "andy87/curl-requester",
   "description" : "Decorator/Builder for curl requests",
-  "version"     : "1.0.1",
+  "version"     : "1.0.2",
   "repositories": [
     {
       "type"      : "vcs",

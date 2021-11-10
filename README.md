@@ -130,7 +130,7 @@ class GeneratorController extends GeneratorController
 ```
 "require": {
     ...
-    "andy87/yii2-generator" : "1.0.0"
+    "andy87/yii2-generator" : ">=1.0.2"
 },
 ```
 <small>repositories</small>
@@ -141,7 +141,7 @@ class GeneratorController extends GeneratorController
         "type"                  : "package",
         "package"               : {
             "name"                  : "andy87/yii2-generator",
-            "version"               : "1.0.0",
+            "version"               : "1.0.2",
             "source"                : {
                 "type"                  : "git",
                 "reference"             : "master",
