@@ -9,6 +9,7 @@ use yii\gii\generators\{
     model\Generator as GeneratorModel,
     crud\Generator as GeneratorCrud
 };
+use yii\helpers\Inflector;
 
 /**
  *  Class `GeneratorController`
@@ -18,19 +19,86 @@ use yii\gii\generators\{
  */
 abstract class GeneratorController extends Controller
 {
-    /** @var bool Отключение уведомлений */
-    const INFO = true;
+    // Constants
 
-    /** @var string Полный путь родительского класса для генерируемого CRUD контроллера используемого по умолчанию */
-    const DEFAULT_CRUD_BASE_CONTROLLER = 'yii\web\Controller';
+    /** @var bool Вывод прогресса генерации */
+    const IS_DISPLAY_INFO = true;
+
+    /** @var string Данные для генерации по умолчанию */
+    const DEFAULT_NS_MODELS              = "common\\models";
+    const DEFAULT_CRUD_NS_SEARCH_MODELS  = "common\\models\\search";
+    const DEFAULT_CRUD_NS_CONTROLLER     = "backend\\controllers";
+    const DEFAULT_CRUD_VIEW_BASE_PATH    = "@backend/views";
+    const DEFAULT_CRUD_PARENT_CONTROLLER = yii\web\Controller::class;
+
+
+
+    // Methods
 
     /**
-     * Генерация моделей
+     * Пакетная генерация моделей по таблицам в массиве
+     *
+     * @param string[] $tableNameList массив таблиц для которых будут сгенерированы модели
+     * @param string $ns namespace генерируемой модели
+     * @param ?string $modelClass (опционально) Имя класса/модели
+     *
+     * @return void
+     *
+     * @throws InvalidConfigException
+     */
+    public function generateModelArray( array $tableNameList, string $ns, ?string $modelClass = null  )
+    {
+        foreach ( $tableNameList as $tableName )
+        {
+            $this->generateModel( $ns, $tableName, $modelClass );
+        }
+    }
+
+    /**
+     * Пакетная генерация крудов по таблицам в массиве
+     *
+     * @param string[] $tableNameList массив таблиц для которых будут сгенерированы круды(crud)
+     * @param string $nameSpaceModelClass namespace класса/модели для которого генерируется CRUD
+     * @param string $nameSpaceSearchModelClass namespace класса для модели реализующей поиск сущностей в таблице
+     * @param string $baseViewPath базовый путь для дирректории с шаблонами
+     * @param string $nameSpaceControllerClass namespace класса для генерируемого контроллера круда
+     * @param string $baseControllerClass Полный путь Родительского класса для генерируемого контроллера круда
+     *
+     * @return void
+     *
+     */
+    public function generateCrudArray(
+        array $tableNameList,
+        string $nameSpaceModelClass = self::DEFAULT_NS_MODELS,
+        string $nameSpaceSearchModelClass = self::DEFAULT_CRUD_NS_SEARCH_MODELS,
+        string $baseViewPath = self::DEFAULT_CRUD_VIEW_BASE_PATH,
+        string $nameSpaceControllerClass = self::DEFAULT_CRUD_NS_CONTROLLER,
+        string $baseControllerClass = self::DEFAULT_CRUD_PARENT_CONTROLLER
+    ): void
+    {
+        foreach ( $tableNameList as $tableName )
+        {
+            $this->generateCrudByTable(
+                $tableName,
+                $nameSpaceModelClass,
+                $nameSpaceSearchModelClass,
+                $baseViewPath,
+                $nameSpaceControllerClass,
+                $baseControllerClass
+            );
+        }
+    }
+
+
+    /**
+     * Генерация модели
      *
      * @param string $ns namespace генерируемой модели
      * @param string $tableName имя таблицы для которой генерируется модель
      * @param ?string $modelClass (опционально) Имя класса/модели
+     *
      * @return void
+     *
      * @throws InvalidConfigException
      */
     protected function generateModel( string $ns, string $tableName, ?string $modelClass = null ): void
@@ -49,22 +117,24 @@ abstract class GeneratorController extends Controller
     }
 
     /**
-     * Генерация крудов
+     * Генерация круда
      *
      * @param string $modelClass  Имя класса/модели для которого генерируется CRUD
      * @param string $searchModelClass Полный путь класса для модели реализующей поиск сущностей в таблице
-     * @param string $controllerClass Полный путь класса для генерируемого контроллера
      * @param string $viewPath путь для генерирования шаблонов
+     * @param string $controllerClass Полный путь класса для генерируемого контроллера
      * @param string $baseControllerClass Полный путь Родительского класса для генерируемого
+     *
      * @return void
+     *
      * @throws InvalidConfigException
      */
     protected function generateCrud(
         string $modelClass,
         string $searchModelClass,
-        string $controllerClass,
         string $viewPath,
-        string $baseControllerClass = self::DEFAULT_CRUD_BASE_CONTROLLER
+        string $controllerClass,
+        string $baseControllerClass = self::DEFAULT_CRUD_PARENT_CONTROLLER
     ): void
     {
         /** @var GeneratorCrud $generator */
@@ -82,6 +152,38 @@ abstract class GeneratorController extends Controller
     }
 
     /**
+     * @param string $tableName название таблицы для которой будет сгенерирован круд(crud)
+     * @param string $nameSpaceModelClass namespace класса/модели для которого генерируется CRUD
+     * @param string $nameSpaceSearchModelClass namespace класса для модели реализующей поиск сущностей в таблице
+     * @param string $baseViewPath базовый путь для дирректории с шаблонами
+     * @param string $nameSpaceControllerClass namespace класса для генерируемого контроллера круда
+     * @param string $baseControllerClass Полный путь Родительского класса для генерируемого контроллера круда
+     *
+     * @return void
+     */
+    protected function generateCrudByTable(
+        string $tableName,
+        string $nameSpaceModelClass = self::DEFAULT_NS_MODELS,
+        string $nameSpaceSearchModelClass = self::DEFAULT_CRUD_NS_SEARCH_MODELS,
+        string $baseViewPath = self::DEFAULT_CRUD_VIEW_BASE_PATH,
+        string $nameSpaceControllerClass = self::DEFAULT_CRUD_NS_CONTROLLER,
+        string $baseControllerClass = self::DEFAULT_CRUD_PARENT_CONTROLLER
+    )
+    {
+        $tableNameCamelCase = Inflector::id2camel( $tableName, '_' );
+        $tableNameKebabCase = Inflector::camel2id( $tableNameCamelCase );
+
+        $this->generateCrud(
+            "{$nameSpaceModelClass}\\{$tableNameCamelCase}",
+            "{$nameSpaceSearchModelClass}\\{$tableNameCamelCase}Search",
+            "{$baseViewPath}/{$tableNameKebabCase}",
+            "{$nameSpaceControllerClass}\\{$tableNameCamelCase}Controller",
+            $baseControllerClass
+        );
+    }
+
+
+        /**
      * Генерация файлов и уведомление в консоль о результате
      *
      * @param array $files Список файлов для генерации
@@ -101,6 +203,6 @@ abstract class GeneratorController extends Controller
      */
     protected function displayIndo( string $text ): void
     {
-        if ( static::INFO === true ) echo PHP_EOL . $text;
+        if ( static::IS_DISPLAY_INFO === true ) echo PHP_EOL . $text;
     }
 }

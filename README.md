@@ -1,12 +1,23 @@
-Класс для генерации моделей & крудов(crud). С простой настройкой для пакетной генерации.  
-  
-Мне всегда не нравилось по одной модельке генерировать поэтому было создано "это расширение".  
-  
-***Решаемые задачи:*** 
-<br> 1. быстрая генерация Models & CRUD для заданных в массиве таблиц
-<br> 2. возможность кастомизации параметров генерации
+<p align="center">
+    <img src="https://github.com/andy87/yii2-generator/master/logo.png">
+    <h1 align="center">curl-requester</h1>
+</p>
 
-## Код использования.
+Класс для генерации моделей & крудов(crud). С простой настройкой для пакетной генерации.  
+
+<hr>
+  
+***Решаемые задачи/цели:*** 
+* быстрая генерация Models & CRUD для таблиц в массиве  
+* возможность кастомизации параметров генерации  
+
+<small>*Мне всегда не нравилось по одной модельке генерировать поэтому было создано "это расширение".*</small>
+
+<hr>
+
+## Пример использования.
+### Код
+Пример контроллера для выполнения консольных команд(advanced)  
 ```php
 
 namespace console\controllers;
@@ -18,7 +29,7 @@ use yii\helpers\Inflector;
 /**
  *
  */
-class GeneratorController extends andy87\yii2_generator\controller\GeneratorController
+class GenerateController extends andy87\yii2_generator\controller\GeneratorController
 {
     const TABLES = [
         'order',
@@ -49,60 +60,72 @@ class GeneratorController extends andy87\yii2_generator\controller\GeneratorCont
     }
 }
 ```
-далее в консоле выполняются команды:
-* php yii generator/models
-* php yii generator/crud
+### Консоль
+Далее в консоле выполняются команды:
+* php yii generate/models
+* php yii generate/crud
 
+<hr>
 
-
-# Использование.
-Создаётся контроллер для выполнения консольных команд, который наследуется от `andy87\yii2_generator\controller\GeneratorController`.
-
+# Детальнее.
+Создаётся контроллер выполнения консольных команд, наследуемый от `andy87\yii2_generator\controller\GeneratorController`.  
+*Имя контроллера и комманд на ваше усмотрение.*
 ```php
+//namespace app\commands; // Basic
+namespace console\controllers; // Advanced
+
 use andy87\yii2_generator\controller\GeneratorController;
 
 class GeneratorController extends GeneratorController
 {
-    ...
+    //some code
 }
 ```
-Имя контроллера и комманд на ваше усмотрение.
 
-константы контроллера:
- * *bool* **INFO** - при значении TRUE методы будут выводить через echo информацию о процессе генерации (по умолчанию: TRUE )
- * *string* **DEFAULT_CRUD_BASE_CONTROLLER** - Полный путь родительского класса для генерируемого CRUD контроллера используемого по умолчанию (по умолчанию: yii\web\Controller )
+Константы контроллера:
+ * *bool* **INFO** - Статус вывода информации о процессе генерации (по умолчанию: **TRUE** ).  
+ * *string* **DEFAULT_CRUD_BASE_CONTROLLER** - Полный путь родительского класса для контроллера используемого в CRUD (по умолчанию: **yii\web\Controller** )
 
  
-в контроллере создаются `actions`, которые вызывают методы:
+в контроллере создаются `actions`, которые вызывающие методы:
 * `generateModel()`
 * `generateCrud()`  
   
 #### generateModel( *string* $ns, *string* $tableName, *?string* $modelClass = null ): void
-* *string* **$ns** - **обязательный**, `namespace` модели
-* *string* **$tableName** - **обязательный**, имя таблицы для которой создаётся модель
-* *?string* **$modelClass** - ***необязательный***, имя создаваемой модели
+* *string* **$ns** - `namespace` модели
+* *string* **$tableName** - имя таблицы для которой создаётся модель
+* *?string* **$modelClass** - имя создаваемой модели (*необязательный*)
 
-для реализации пакетной генерации надо вызов метода обернуть в цикл, пример:
+для реализации пакетной генерации метод надо обернуть в цикл, пример:
 ```php
-    /** Выполнение консольной команды `php yii generator/models` */
+    //TODO: тут должно быть описание использование встроенного метода пакетной генерации
+    /** блок кода консольной команды `php yii xxx/models` */
     public function actionModels()
     {
         foreach ( self::TABLES as $tableName )
         {
-            $this->generateModel( 'common\\models', $tableName );
+            /** Advanced */
+            $this->generateModel( 'common\\models', $tableName ); 
+            //Аналогичная запись без хардкода
+            $this->generateModel( static::DEFAULT_CRUD_NS_MODELS, $tableName ); // Advanced
+            //Используется статик для возможности переназначить константу
+
+            /** Basic */
+            $this->generateModel( 'app\\models', $tableName );
         }
     }
 ```  
   
 #### generateCrud( *string* $modelClass, *string* $searchModelClass, *string* $controllerClass, *string* $viewPath, *string* $baseControllerClass ): void
-* *string* **$modelClass** - **обязательный**, имя класса/модели для которого генерируется CRUD
-* *string* **$searchModelClass** - **обязательный**, полный путь класса для модели реализующей поиск сущностей в таблице
-* *string* **$controllerClass** - **обязательный**, полный путь класса для генерируемого контроллера
-* *string* **$viewPath** - **обязательный**, путь для генерирования шаблонов
-* *string* **$baseControllerClass** - ***необязательный***, полный путь родительского класса для генерируемого контроллера
+* *string* **$modelClass** - имя класса/модели для которого генерируется CRUD
+* *string* **$searchModelClass** - полный путь класса для модели реализующей поиск сущностей в таблице
+* *string* **$viewPath** -  путь для генерирования шаблонов
+* *string* **$controllerClass** - полный путь класса для генерируемого контроллера
+* *string* **$baseControllerClass** - полный путь родительского класса генерируемого контроллера (*необязательный*, по умолчанию: **yii\web\Controller** )
 
-для реализации пакетной генерации надо вызов метода обернуть в цикл, пример:
+для реализации пакетной генерации метода надо обернуть в цикл, пример:
 ```php
+    //TODO: тут должно быть описание использование встроенного метода пакетной генерации
     /** Выполнение консольной команды `php yii generator/crud` */
     public function actionCrud()
     {
@@ -117,20 +140,36 @@ class GeneratorController extends GeneratorController
                 "backend\\controllers\\{$tableNameCamelCase}Controller",
                 "@backend/views/{$tableNameKebabCase}"
             );
+            
+            //Аналогичная запись без хардкода
+            $this->generateCrud(
+                static::DEFAULT_CRUD_NS_MODELS .'\\'. $tableNameCamelCase,
+                static::DEFAULT_CRUD_NS_SEARCH_MODELS .'\\'. "{$tableNameCamelCase}Search",
+                static::DEFAULT_CRUD_NS_CONTROLLER .'\\'. "{$tableNameCamelCase}Controller",
+                static::DEFAULT_CRUD_VIEW_BASE_PATH .'/'. $tableNameKebabCase
+            );
+            //Используется статик для возможности переназначить константу
         }
     }
 ```
 
+<hr>
 
 # Установка
-Установка с помощью [composer](https://getcomposer.org/download/)  
+
+## Зависимости
+- php ( >= 7.4 )
+- yii2 
+
+## composer.json
+Установка с помощью [composer](https://getcomposer.org/download/)
 
 Добавить в `composer.json`  
 <small>require</small>
 ```
 "require": {
     ...
-    "andy87/yii2-generator" : ">=1.0.2"
+    "andy87/yii2-generator" : ">=1.1.3"
 },
 ```
 <small>repositories</small>
@@ -141,7 +180,7 @@ class GeneratorController extends GeneratorController
         "type"                  : "package",
         "package"               : {
             "name"                  : "andy87/yii2-generator",
-            "version"               : "1.0.2",
+            "version"               : "1.1.3",
             "source"                : {
                 "type"                  : "git",
                 "reference"             : "master",
@@ -157,3 +196,8 @@ class GeneratorController extends GeneratorController
     }
 ]
 ```
+
+##Log
+* ***1.1.3*** 
+  * Обновил описание
+  * Добавил пакетную генерацию(из коробки)
