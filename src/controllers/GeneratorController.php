@@ -20,6 +20,8 @@ use yii\helpers\Inflector;
  */
 abstract class GeneratorController extends Controller
 {
+    const DISPLAY_INFO = true;
+
     // Property
 
     /** @var Generator $generator */
@@ -36,6 +38,6 @@ abstract class GeneratorController extends Controller
     {
         parent::init();
 
-        $this->generator = Yii::createObject(['class' => Generator::class ]);
+        $this->generator = Yii::createObject(['class' => Generator::class, static::DISPLAY_INFO ]);
     }
 }

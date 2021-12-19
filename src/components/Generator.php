@@ -19,9 +19,6 @@ class Generator
 {
     // Constants
 
-    /** @var bool Вывод прогресса генерации */
-    const IS_DISPLAY_INFO = true;
-
     /** @var string Данные для генерации по умолчанию */
     const DEFAULT_NS_MODELS              = "common\\models";
     const DEFAULT_CRUD_NS_SEARCH_MODELS  = "common\\models\\search";
@@ -31,60 +28,26 @@ class Generator
 
 
 
+    // Params
+
+    /** @var bool $is_display_info Вывод прогресса генерации */
+    private bool $is_display_info;
+
+
+
+    // Magic
+
+    /**
+     * @param bool $is_display_info Вывод прогресса генерации
+     */
+    public function __construct( bool $is_display_info = false )
+    {
+        $this->is_display_info = $is_display_info;
+    }
+
+
+
     // Methods
-
-    /**
-     * Пакетная генерация моделей по таблицам в массиве
-     *
-     * @param string[] $tableNameList массив таблиц для которых будут сгенерированы модели
-     * @param string $ns namespace генерируемой модели
-     *
-     * @return void
-     *
-     * @throws InvalidConfigException
-     */
-    public function generateModelArray( array $tableNameList, string $ns = self::DEFAULT_NS_MODELS )
-    {
-        foreach ( $tableNameList as $tableName )
-        {
-            $this->generateModel( $ns, $tableName );
-        }
-    }
-
-    /**
-     * Пакетная генерация крудов по таблицам в массиве
-     *
-     * @param string[] $tableNameList массив таблиц для которых будут сгенерированы круды(crud)
-     * @param string $nameSpaceModelClass namespace класса/модели для которого генерируется CRUD
-     * @param string $nameSpaceSearchModelClass namespace класса для модели реализующей поиск сущностей в таблице
-     * @param string $baseViewPath базовый путь для дирректории с шаблонами
-     * @param string $nameSpaceControllerClass namespace класса для генерируемого контроллера круда
-     * @param string $baseControllerClass Полный путь Родительского класса для генерируемого контроллера круда
-     *
-     * @return void
-     * @throws InvalidConfigException
-     */
-    public function generateCrudArray(
-        array $tableNameList,
-        string $nameSpaceModelClass = self::DEFAULT_NS_MODELS,
-        string $nameSpaceSearchModelClass = self::DEFAULT_CRUD_NS_SEARCH_MODELS,
-        string $baseViewPath = self::DEFAULT_CRUD_VIEW_BASE_PATH,
-        string $nameSpaceControllerClass = self::DEFAULT_CRUD_NS_CONTROLLER,
-        string $baseControllerClass = self::DEFAULT_CRUD_PARENT_CONTROLLER
-    ): void
-    {
-        foreach ( $tableNameList as $tableName )
-        {
-            $this->generateCrudByTable(
-                $tableName,
-                $nameSpaceModelClass,
-                $nameSpaceSearchModelClass,
-                $baseViewPath,
-                $nameSpaceControllerClass,
-                $baseControllerClass
-            );
-        }
-    }
 
     /**
      * Генерация модели
@@ -119,7 +82,7 @@ class Generator
      * @param string $searchModelClass Полный путь класса для модели реализующей поиск сущностей в таблице
      * @param string $viewPath путь для генерирования шаблонов
      * @param string $controllerClass Полный путь класса для генерируемого контроллера
-     * @param string $baseControllerClass Полный путь Родительского класса для генерируемого
+     * @param string $baseControllerClass Полный путь Родительского класса для генерируемого контроллера
      *
      * @return void
      *
@@ -180,6 +143,59 @@ class Generator
     }
 
     /**
+     * Пакетная генерация моделей по таблицам в массиве
+     *
+     * @param string[] $tableNameList массив таблиц для которых будут сгенерированы модели
+     * @param string $ns namespace генерируемой модели
+     *
+     * @return void
+     *
+     * @throws InvalidConfigException
+     */
+    public function generateModelArray( array $tableNameList, string $ns = self::DEFAULT_NS_MODELS )
+    {
+        foreach ( $tableNameList as $tableName )
+        {
+            $this->generateModel( $ns, $tableName );
+        }
+    }
+
+    /**
+     * Пакетная генерация крудов по таблицам в массиве
+     *
+     * @param string[] $tableNameList массив таблиц для которых будут сгенерированы круды(crud)
+     * @param string $nameSpaceModelClass namespace класса/модели для которого генерируется CRUD
+     * @param string $nameSpaceSearchModelClass namespace класса для модели реализующей поиск сущностей в таблице
+     * @param string $baseViewPath базовый путь для дирректории с шаблонами
+     * @param string $nameSpaceControllerClass namespace класса для генерируемого контроллера круда
+     * @param string $baseControllerClass Полный путь Родительского класса для генерируемого контроллера круда
+     *
+     * @return void
+     * @throws InvalidConfigException
+     */
+    public function generateCrudArray(
+        array $tableNameList,
+        string $nameSpaceModelClass = self::DEFAULT_NS_MODELS,
+        string $nameSpaceSearchModelClass = self::DEFAULT_CRUD_NS_SEARCH_MODELS,
+        string $baseViewPath = self::DEFAULT_CRUD_VIEW_BASE_PATH,
+        string $nameSpaceControllerClass = self::DEFAULT_CRUD_NS_CONTROLLER,
+        string $baseControllerClass = self::DEFAULT_CRUD_PARENT_CONTROLLER
+    ): void
+    {
+        foreach ( $tableNameList as $tableName )
+        {
+            $this->generateCrudByTable(
+                $tableName,
+                $nameSpaceModelClass,
+                $nameSpaceSearchModelClass,
+                $baseViewPath,
+                $nameSpaceControllerClass,
+                $baseControllerClass
+            );
+        }
+    }
+
+    /**
      * Генерация файлов и уведомление в консоль о результате
      *
      * @param array $files Список файлов для генерации
@@ -199,7 +215,7 @@ class Generator
      */
     protected function displayIndo( string $text ): void
     {
-        if ( static::IS_DISPLAY_INFO === true ) echo PHP_EOL . $text;
+        if ( $this->is_display_info ) echo PHP_EOL . $text;
     }
 
 }

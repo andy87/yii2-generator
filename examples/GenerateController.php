@@ -70,28 +70,6 @@ class GenerateController extends GeneratorController
         );
     }
 
-    /**
-     * Пакетная генерация CRUD'ов
-     *
-     * php yii generate/list-cruds
-     *
-     * @throws InvalidConfigException
-     */
-    public function actionListCruds()
-    {
-        // Generate with default params
-        $this->generator->generateCrudArray( self::TABLE_LIST );
-
-        //Generate with custom params
-        $this->generator->generateCrudArray(
-            self::TABLE_LIST,
-            ( $nameSpaceModelClass = 'common\\models\\custom\\folder' ), // Default: common\\models
-            ( $nameSpaceSearchModelClass = 'common\\models\\custom\\folder\\search' ), // Default: common\\models\\search
-            ( $baseViewPath = '@backend/views/custom/path/' ), // Default: backend\\controllers
-            ( $nameSpaceControllerClass = 'backend\\controllers\\custom\\dir' ), // Default: @backend/views
-            ( $baseControllerClass = \backend\components\controllers\WebController::class ) // Default: yii\web\Controller::class;
-        );
-    }
 
     /**
      * Пакетная генерация Model'ей
@@ -109,6 +87,29 @@ class GenerateController extends GeneratorController
         $this->generator->generateModelArray(
             self::TABLE_LIST,
             ( $nameSpaceModelClass = 'common\\models\\some\\dir' ) // Default: common\\models
+        );
+    }
+
+    /**
+     * Пакетная генерация CRUD'ов
+     *
+     * php yii generate/list-cruds
+     *
+     * @throws InvalidConfigException
+     */
+    public function actionListCruds()
+    {
+        // Generate with default params
+        $this->generator->generateCrudArray( self::TABLE_LIST );
+
+        //Generate with custom params
+        $this->generator->generateCrudArray(
+            self::TABLE_LIST,
+            ( $nameSpaceModelClass = 'common\\models\\custom\\folder' ), // Default: common\\models
+            ( $nameSpaceSearchModelClass = 'common\\models\\custom\\folder\\search' ), // Default: common\\models\\search
+            ( $baseViewPath = '@backend/views/custom/path/' ), // Default: @backend/views
+            ( $nameSpaceControllerClass = 'backend\\controllers\\custom\\dir' ), // Default: @backend/views
+            ( $baseControllerClass = \backend\components\controllers\WebController::class ) // Default: yii\web\Controller::class;
         );
     }
 

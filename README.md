@@ -158,74 +158,83 @@ class GeneratorController extends GeneratorController
 ```
 
 Константы контроллера:
- * *bool* **INFO** - Статус вывода информации о процессе генерации (по умолчанию: **TRUE** ).  
- * *string* **DEFAULT_CRUD_BASE_CONTROLLER** - Полный путь родительского класса для контроллера используемого в CRUD (по умолчанию: **yii\web\Controller** )
-
+ * *bool* **DISPLAY_INFO** - Статус вывода информации о процессе генерации (по умолчанию: **TRUE** ).  
  
-в контроллере создаются `actions`, которые вызывающие методы:
+в контроллере создаются `actions`, в которых вызываются методы компонента `Generator`:
 * `generateModel()`
 * `generateCrud()`  
+* `generateModelArray()`  
+* `generateCrudArray()`  
   
-#### generateModel( *string* $ns, *string* $tableName, *?string* $modelClass = null ): void
+### Генерация модели
+#### ->generateModel()
 * *string* **$ns** - `namespace` модели
 * *string* **$tableName** - имя таблицы для которой создаётся модель
 * *?string* **$modelClass** - имя создаваемой модели (*необязательный*)
-
-для реализации пакетной генерации метод надо обернуть в цикл, пример:
 ```php
-    //TODO: тут должно быть описание использование встроенного метода пакетной генерации
-    /** блок кода консольной команды `php yii xxx/models` */
-    public function actionModels()
-    {
-        foreach ( self::TABLES as $tableName )
-        {
-            /** Advanced */
-            $this->generateModel( 'common\\models', $tableName ); 
-            //Аналогичная запись без хардкода
-            $this->generateModel( static::DEFAULT_CRUD_NS_MODELS, $tableName ); // Advanced
-            //Используется статик для возможности переназначить константу
-
-            /** Basic */
-            $this->generateModel( 'app\\models', $tableName );
-        }
-    }
-```  
+public function actionModels( string $tableName )
+{
+    $this->generator->generateModel( 'common\\models', $tableName );
+}
+```
   
-#### generateCrud( *string* $modelClass, *string* $searchModelClass, *string* $controllerClass, *string* $viewPath, *string* $baseControllerClass ): void
-* *string* **$modelClass** - имя класса/модели для которого генерируется CRUD
+### Генерация одного круд'а (CRUD)
+#### ->generateCrud()
+* *string* **$modelClass** - Имя класса/модели для которого генерируется CRUD
 * *string* **$searchModelClass** - полный путь класса для модели реализующей поиск сущностей в таблице
-* *string* **$viewPath** -  путь для генерирования шаблонов
+* *string* **$viewPath** - путь для генерирования шаблонов
 * *string* **$controllerClass** - полный путь класса для генерируемого контроллера
-* *string* **$baseControllerClass** - полный путь родительского класса генерируемого контроллера (*необязательный*, по умолчанию: **yii\web\Controller** )
-
-для реализации пакетной генерации метода надо обернуть в цикл, пример:
+* *string* **$baseControllerClass** - полный путь Родительского класса для генерируемого контроллера (*необязательный*, по умолчанию: **yii\web\Controller** )
 ```php
-    //TODO: тут должно быть описание использование встроенного метода пакетной генерации
-    /** Выполнение консольной команды `php yii generator/crud` */
-    public function actionCrud()
-    {
-        foreach ( self::TABLES as $tableName )
-        {
-            $tableNameCamelCase = Inflector::id2camel( $tableName, '_' );
-            $tableNameKebabCase = Inflector::camel2id( $tableNameCamelCase );
+public function actionCrud( string $tableName )
+{
+    $tableNameCamelCase = Inflector::id2camel( $tableName, '_' );
+    $tableNameKebabCase = Inflector::camel2id( $tableNameCamelCase );
 
-            $this->generateCrud(
-                "common\\models\\{$tableNameCamelCase}",
-                "common\\models\\search\\{$tableNameCamelCase}Search",
-                "backend\\controllers\\{$tableNameCamelCase}Controller",
-                "@backend/views/{$tableNameKebabCase}"
-            );
-            
-            //Аналогичная запись без хардкода
-            $this->generateCrud(
-                static::DEFAULT_CRUD_NS_MODELS .'\\'. $tableNameCamelCase,
-                static::DEFAULT_CRUD_NS_SEARCH_MODELS .'\\'. "{$tableNameCamelCase}Search",
-                static::DEFAULT_CRUD_NS_CONTROLLER .'\\'. "{$tableNameCamelCase}Controller",
-                static::DEFAULT_CRUD_VIEW_BASE_PATH .'/'. $tableNameKebabCase
-            );
-            //Используется статик для возможности переназначить константу
-        }
+    $this->generator->generateCrud(
+        Generator::DEFAULT_NS_MODELS . '\\' . $tableNameCamelCase,
+        "common\\models\\search\\{$tableNameCamelCase}Search",
+        "@backend/views/$tableNameKebabCase",
+        "backend\\controllers\\{$tableNameCamelCase}Controller",
+        \yii\web\Controller::class
+    );
+}
+```
+
+### Пакетная генерация Model'ей
+#### ->generateModelArray()
+* *string* **$tableNameList** - массив таблиц для которых будут сгенерированы модели
+* *string* **$ns** - namespace генерируемой модели
+```php
+    public function actionListModels()
+    {
+        $this->generator->generateModelArray(
+            self::TABLE_LIST, // Либо другйо источник
+            ( $nameSpaceModelClass = 'common\\models' )
+        );
     }
+```
+
+### Пакетная генерация CRUD'ов
+#### ->generateCrudArray()
+* *string[]* **$tableNameList** - массив таблиц для которых будут сгенерированы круды(crud)
+* *string* **$nameSpaceModelClass** - namespace класса/модели для которого генерируется CRUD
+* *string* **$nameSpaceSearchModelClass** - namespace класса для модели реализующей поиск сущностей в таблице
+* *string* **$baseViewPath** - базовый путь для дирректории с шаблонами
+* *string* **$nameSpaceControllerClass** - namespace класса для генерируемого контроллера круда
+* *string* **$baseControllerClass** - Полный путь Родительского класса для генерируемого контроллера круда
+```php
+public function actionListCruds()
+{
+    $this->generator->generateCrudArray(
+        self::TABLE_LIST, // Либо другйо источник
+        ( $nameSpaceModelClass = 'common\\models' ),
+        ( $nameSpaceSearchModelClass = 'common\\models\\search' ),
+        ( $baseViewPath = '@backend/views' ),
+        ( $nameSpaceControllerClass = 'backend\\controllers' ),
+        ( $baseControllerClass = \yii\web\Controller::class )
+    );
+}
 ```
 
 <hr>
