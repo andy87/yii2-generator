@@ -91,6 +91,25 @@ class GenerateController extends GeneratorController
     }
 
     /**
+     * Пакетная генерация Model'ей
+     *
+     * php yii generate/list-models
+     *
+     * @throws InvalidConfigException
+     */
+    public function actionListModels()
+    {
+        // Generate with default params
+        $this->generator->generateModelArray( self::TABLE_LIST );
+
+        //Generate with custom params
+        $this->generator->generateModelArray(
+            self::TABLE_LIST,
+            ( $nameSpaceModelClass = 'common\\models\\some\\dir' ) // Default: common\\models
+        );
+    }
+    
+    /**
      * Пакетная генерация CRUD'ов
      *
      * php yii generate/list-cruds
@@ -110,25 +129,6 @@ class GenerateController extends GeneratorController
             ( $baseViewPath = '@backend/views/custom/path/' ), // Default: backend\\controllers
             ( $nameSpaceControllerClass = 'backend\\controllers\\custom\\dir' ), // Default: @backend/views
             ( $baseControllerClass = \backend\components\controllers\WebController::class ) // Default: yii\web\Controller::class;
-        );
-    }
-
-    /**
-     * Пакетная генерация Model'ей
-     *
-     * php yii generate/list-models
-     *
-     * @throws InvalidConfigException
-     */
-    public function actionListModels()
-    {
-        // Generate with default params
-        $this->generator->generateModelArray( self::TABLE_LIST );
-
-        //Generate with custom params
-        $this->generator->generateModelArray(
-            self::TABLE_LIST,
-            ( $nameSpaceModelClass = 'common\\models\\some\\dir' ) // Default: common\\models
         );
     }
 }
