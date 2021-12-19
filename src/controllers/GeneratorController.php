@@ -65,7 +65,7 @@ abstract class GeneratorController extends Controller
      * @param string $baseControllerClass Полный путь Родительского класса для генерируемого контроллера круда
      *
      * @return void
-     *
+     * @throws InvalidConfigException
      */
     public function generateCrudArray(
         array $tableNameList,
@@ -111,7 +111,7 @@ abstract class GeneratorController extends Controller
 
         if ( $modelClass ) $generator->modelClass = $modelClass;
 
-        $this->displayIndo("\r\nGenerate `model` for table `{$tableName}` : ");
+        $this->displayIndo("\r\nGenerate `model` for table `$tableName` : ");
 
         $this->processGenerate( $generator->generate() );
     }
@@ -146,7 +146,7 @@ abstract class GeneratorController extends Controller
         $generator->viewPath = $viewPath;
         $generator->baseControllerClass = $baseControllerClass;
 
-        $this->displayIndo("\r\nGenerate `crud` for modelClass `{$modelClass}` : ");
+        $this->displayIndo("\r\nGenerate `crud` for modelClass `$modelClass` : ");
 
         $this->processGenerate( $generator->generate() );
     }
@@ -160,6 +160,7 @@ abstract class GeneratorController extends Controller
      * @param string $baseControllerClass Полный путь Родительского класса для генерируемого контроллера круда
      *
      * @return void
+     * @throws InvalidConfigException
      */
     protected function generateCrudByTable(
         string $tableName,
@@ -174,16 +175,16 @@ abstract class GeneratorController extends Controller
         $tableNameKebabCase = Inflector::camel2id( $tableNameCamelCase );
 
         $this->generateCrud(
-            "{$nameSpaceModelClass}\\{$tableNameCamelCase}",
-            "{$nameSpaceSearchModelClass}\\{$tableNameCamelCase}Search",
-            "{$baseViewPath}/{$tableNameKebabCase}",
-            "{$nameSpaceControllerClass}\\{$tableNameCamelCase}Controller",
+            "$nameSpaceModelClass\\$tableNameCamelCase",
+            "$nameSpaceSearchModelClass\\{$tableNameCamelCase}Search",
+            "$baseViewPath/$tableNameKebabCase",
+            "$nameSpaceControllerClass\\{$tableNameCamelCase}Controller",
             $baseControllerClass
         );
     }
 
 
-        /**
+    /**
      * Генерация файлов и уведомление в консоль о результате
      *
      * @param array $files Список файлов для генерации
