@@ -254,7 +254,7 @@ public function actionListCruds()
 ```
 "require": {
     ...
-    "andy87/yii2-generator" : ">=1.1.3"
+    "andy87/yii2-generator" : ">=1.1.4"
 },
 ```
 <small>repositories</small>
@@ -265,7 +265,7 @@ public function actionListCruds()
         "type"                  : "package",
         "package"               : {
             "name"                  : "andy87/yii2-generator",
-            "version"               : "1.1.3",
+            "version"               : "1.1.4",
             "source"                : {
                 "type"                  : "git",
                 "reference"             : "master",

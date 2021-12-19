@@ -38,6 +38,7 @@ abstract class GeneratorController extends Controller
     {
         parent::init();
 
-        $this->generator = Yii::createObject(['class' => Generator::class, static::DISPLAY_INFO ]);
+        $this->generator = Yii::createObject(Generator::class,[ self::DISPLAY_INFO ]);
+
     }
 }
