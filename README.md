@@ -54,16 +54,16 @@ class GenerateController extends GeneratorController
     /**
      * Генерация одной модели
      *
-     * php yii generate/models
+     * php yii generate/model
      *
      * @throws InvalidConfigException
      */
-    public function actionModels( string $tableName )
+    public function actionModel( string $tableName )
     {
         /** Advanced */
-        $this->generator->generateModel( 'common\\models', $tableName );
+        $this->generator->generateModel( 'common\\models', $tableName, ( $baseClass = yii\db\ActiveRecord::class ) );
         //Аналогичная запись без хардкода
-        $this->generator->generateModel( Generator::DEFAULT_NS_MODELS, $tableName );
+        $this->generator->generateModel( Generator::DEFAULT_NS_MODELS, $tableName, Generator::DEFAULT_MODEL_PARENT_CLASS );
 
         /** Basic */
         $this->generator->generateModel( 'app\\models', $tableName );
@@ -72,7 +72,7 @@ class GenerateController extends GeneratorController
     /**
      * Генерация одного круд'а (CRUD)
      *
-     * php yii generate/cruds
+     * php yii generate/crud
      *
      * @throws InvalidConfigException
      */
@@ -105,7 +105,8 @@ class GenerateController extends GeneratorController
         //Generate with custom params
         $this->generator->generateModelArray(
             self::TABLE_LIST,
-            ( $nameSpaceModelClass = 'common\\models\\some\\dir' ) // Default: common\\models
+            ( $nameSpaceModelClass = 'common\\models\\some\\dir' ), // Default: common\\models
+            ( $baseClass = yii\db\ActiveRecord::class ) // Default: yii\db\ActiveRecord::class
         );
     }
     

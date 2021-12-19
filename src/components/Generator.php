@@ -20,11 +20,15 @@ class Generator
     // Constants
 
     /** @var string Данные для генерации по умолчанию */
-    const DEFAULT_NS_MODELS              = "common\\models";
-    const DEFAULT_CRUD_NS_SEARCH_MODELS  = "common\\models\\search";
-    const DEFAULT_CRUD_NS_CONTROLLER     = "backend\\controllers";
-    const DEFAULT_CRUD_VIEW_BASE_PATH    = "@backend/views";
-    const DEFAULT_CRUD_PARENT_CONTROLLER = yii\web\Controller::class;
+    const DEFAULT_NS_MODELS             = "common\\models";
+    const DEFAULT_NS_CRUD_SEARCH_MODELS = "common\\models\\search";
+    const DEFAULT_NS_CRUD_CONTROLLER    = "backend\\controllers";
+
+    const DEFAULT_VIEW_CRUD_PATH        = "@backend/views";
+
+
+    const DEFAULT_CRUD_PARENT_CONTROLLER = \yii\web\Controller::class;
+    const DEFAULT_MODEL_PARENT_CLASS     = \yii\db\ActiveRecord::class;
 
 
 
@@ -54,21 +58,20 @@ class Generator
      *
      * @param string $ns namespace генерируемой модели
      * @param string $tableName имя таблицы для которой генерируется модель
-     * @param ?string $modelClass (опционально) Имя класса/модели
+     * @param ?string $baseClass (опционально) Родительский класс
      *
      * @return void
      *
      * @throws InvalidConfigException
      */
-    public function generateModel( string $ns, string $tableName, ?string $modelClass = null ): void
+    public function generateModel( string $ns, string $tableName, ?string $baseClass = self::DEFAULT_MODEL_PARENT_CLASS ): void
     {
         /** @var GeneratorModel $generator */
         $generator = Yii::createObject(['class' => GeneratorModel::class ]);
 
         $generator->ns = $ns;
         $generator->tableName = $tableName;
-
-        if ( $modelClass ) $generator->modelClass = $modelClass;
+        $generator->baseClass = $baseClass;
 
         $this->displayIndo("\r\nGenerate `model` for table `$tableName` : ");
 
@@ -124,9 +127,9 @@ class Generator
     public function generateCrudByTable(
         string $tableName,
         string $nameSpaceModelClass = self::DEFAULT_NS_MODELS,
-        string $nameSpaceSearchModelClass = self::DEFAULT_CRUD_NS_SEARCH_MODELS,
-        string $baseViewPath = self::DEFAULT_CRUD_VIEW_BASE_PATH,
-        string $nameSpaceControllerClass = self::DEFAULT_CRUD_NS_CONTROLLER,
+        string $nameSpaceSearchModelClass = self::DEFAULT_NS_CRUD_SEARCH_MODELS,
+        string $baseViewPath = self::DEFAULT_VIEW_CRUD_PATH,
+        string $nameSpaceControllerClass = self::DEFAULT_NS_CRUD_CONTROLLER,
         string $baseControllerClass = self::DEFAULT_CRUD_PARENT_CONTROLLER
     )
     {
@@ -176,9 +179,9 @@ class Generator
     public function generateCrudArray(
         array $tableNameList,
         string $nameSpaceModelClass = self::DEFAULT_NS_MODELS,
-        string $nameSpaceSearchModelClass = self::DEFAULT_CRUD_NS_SEARCH_MODELS,
-        string $baseViewPath = self::DEFAULT_CRUD_VIEW_BASE_PATH,
-        string $nameSpaceControllerClass = self::DEFAULT_CRUD_NS_CONTROLLER,
+        string $nameSpaceSearchModelClass = self::DEFAULT_NS_CRUD_SEARCH_MODELS,
+        string $baseViewPath = self::DEFAULT_VIEW_CRUD_PATH,
+        string $nameSpaceControllerClass = self::DEFAULT_NS_CRUD_CONTROLLER,
         string $baseControllerClass = self::DEFAULT_CRUD_PARENT_CONTROLLER
     ): void
     {

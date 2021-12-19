@@ -34,11 +34,11 @@ class GenerateController extends GeneratorController
     /**
      * Генерация одной модели
      *
-     * php yii generate/models
+     * php yii generate/model
      *
      * @throws InvalidConfigException
      */
-    public function actionModels( string $tableName )
+    public function actionModel( string $tableName )
     {
         /** Advanced */
         $this->generator->generateModel( 'common\\models', $tableName );
@@ -52,7 +52,7 @@ class GenerateController extends GeneratorController
     /**
      * Генерация одного круд'а (CRUD)
      *
-     * php yii generate/cruds
+     * php yii generate/crud
      *
      * @throws InvalidConfigException
      */
