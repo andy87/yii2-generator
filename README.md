@@ -135,8 +135,10 @@ class GenerateController extends GeneratorController
 ```
 ### Консоль
 Далее в консоле выполняются команды:
-* php yii generate/models
-* php yii generate/crud
+* php yii generate/model table_name
+* php yii generate/crud table_name
+* php yii generate/list-model
+* php yii generate/list-crud
 
 <hr>
 
