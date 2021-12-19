@@ -1,6 +1,6 @@
 <p align="center">
-    <img src="https://github.com/andy87/yii2-generator/master/logo.png">
-    <h1 align="center">curl-requester</h1>
+    <img src="https://raw.githubusercontent.com/andy87/yii2-generator/master/logo.png" alt="Yii2">
+    <h1 align="center">yii2-generator</h1>
 </p>
 
 Класс для генерации моделей & крудов(crud). С простой настройкой для пакетной генерации.  
