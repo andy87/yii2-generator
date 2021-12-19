@@ -3,6 +3,7 @@
 //namespace app\commands; // Basic
 namespace console\controllers; // Advanced
 
+use andy87\yii2_generator\components\Generator;
 use yii\base\InvalidConfigException;
 use yii\helpers\Inflector;
 use andy87\yii2_generator\controllers\GeneratorController;
@@ -40,12 +41,12 @@ class GenerateController extends GeneratorController
     public function actionModels( string $tableName )
     {
         /** Advanced */
-        $this->generateModel( 'common\\models', $tableName );
+        $this->generator->generateModel( 'common\\models', $tableName );
         //Аналогичная запись без хардкода
-        $this->generateModel( static::DEFAULT_NS_MODELS, $tableName );
+        $this->generator->generateModel( Generator::DEFAULT_NS_MODELS, $tableName );
 
         /** Basic */
-        $this->generateModel( 'app\\models', $tableName );
+        $this->generator->generateModel( 'app\\models', $tableName );
     }
 
     /**
@@ -60,8 +61,8 @@ class GenerateController extends GeneratorController
         $tableNameCamelCase = Inflector::id2camel( $tableName, '_' );
         $tableNameKebabCase = Inflector::camel2id( $tableNameCamelCase );
 
-        $this->generateCrud(
-            static::DEFAULT_NS_MODELS . '\\' . $tableNameCamelCase,
+        $this->generator->generateCrud(
+            Generator::DEFAULT_NS_MODELS . '\\' . $tableNameCamelCase,
             "common\\models\\search\\{$tableNameCamelCase}Search",
             "@backend/views/$tableNameKebabCase",
             "backend\\controllers\\{$tableNameCamelCase}Controller",
@@ -79,10 +80,10 @@ class GenerateController extends GeneratorController
     public function actionListCruds()
     {
         // Generate with default params
-        $this->generateCrudArray( self::TABLE_LIST );
+        $this->generator->generateCrudArray( self::TABLE_LIST );
 
         //Generate with custom params
-        $this->generateCrudArray(
+        $this->generator->generateCrudArray(
             self::TABLE_LIST,
             ( $nameSpaceModelClass = 'common\\models\\custom\\folder' ), // Default: common\\models
             ( $nameSpaceSearchModelClass = 'common\\models\\custom\\folder\\search' ), // Default: common\\models\\search
@@ -102,10 +103,10 @@ class GenerateController extends GeneratorController
     public function actionListModels()
     {
         // Generate with default params
-        $this->generateModelArray( self::TABLE_LIST );
+        $this->generator->generateModelArray( self::TABLE_LIST );
 
         //Generate with custom params
-        $this->generateModelArray(
+        $this->generator->generateModelArray(
             self::TABLE_LIST,
             ( $nameSpaceModelClass = 'common\\models\\some\\dir' ) // Default: common\\models
         );
