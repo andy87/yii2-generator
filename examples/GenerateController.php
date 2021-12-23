@@ -3,10 +3,14 @@
 //namespace app\commands; // Basic
 namespace console\controllers; // Advanced
 
-use andy87\yii2_generator\components\Generator;
-use yii\base\InvalidConfigException;
-use yii\helpers\Inflector;
-use andy87\yii2_generator\controllers\GeneratorController;
+use yii\{
+    helpers\Inflector,
+    base\InvalidConfigException
+};
+use andy87\yii2_generator\{
+    components\Generator,
+    controllers\GeneratorController
+};
 
 /**
  *  Class `GenerateController`

@@ -3,12 +3,16 @@
 namespace andy87\yii2_generator\components;
 
 use Yii;
-use yii\base\InvalidConfigException;
+use yii\{
+    helpers\Inflector,
+    base\InvalidConfigException,
+    web\Controller,
+    db\ActiveRecord
+};
 use yii\gii\generators\{
     model\Generator as GeneratorModel,
     crud\Generator as GeneratorCrud
 };
-use yii\helpers\Inflector;
 
 /**
  *  Class `Generator`
@@ -26,9 +30,8 @@ class Generator
 
     const DEFAULT_VIEW_CRUD_PATH        = "@backend/views";
 
-
-    const DEFAULT_CRUD_PARENT_CONTROLLER = \yii\web\Controller::class;
-    const DEFAULT_MODEL_PARENT_CLASS     = \yii\db\ActiveRecord::class;
+    const DEFAULT_CRUD_PARENT_CONTROLLER = Controller::class;
+    const DEFAULT_MODEL_PARENT_CLASS     = ActiveRecord::class;
 
 
 

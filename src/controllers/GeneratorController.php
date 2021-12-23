@@ -2,15 +2,17 @@
 
 namespace andy87\yii2_generator\controllers;
 
-use andy87\yii2_generator\components\Generator;
 use Yii;
-use yii\base\InvalidConfigException;
-use yii\console\Controller;
+use yii\{
+    helpers\Inflector,
+    base\InvalidConfigException,
+    console\Controller
+};
 use yii\gii\generators\{
     model\Generator as GeneratorModel,
     crud\Generator as GeneratorCrud
 };
-use yii\helpers\Inflector;
+use andy87\yii2_generator\components\Generator;
 
 /**
  *  Class `GeneratorController`
@@ -38,7 +40,7 @@ abstract class GeneratorController extends Controller
     {
         parent::init();
 
-        $this->generator = Yii::createObject(Generator::class,[ self::DISPLAY_INFO ]);
+        $this->generator = Yii::createObject( Generator::class,[ self::DISPLAY_INFO ]);
 
     }
 }
