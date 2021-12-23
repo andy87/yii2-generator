@@ -24,7 +24,7 @@
 namespace console\controllers; // Advanced
 
 use yii\{
- helpers\Inflector,
+  helpers\Inflector,
   base\InvalidConfigException
 };
 use andy87\yii2_generator\{
@@ -258,7 +258,7 @@ public function actionListCruds()
 ```
 "require": {
     ...
-    "andy87/yii2-generator" : ">=1.1.4"
+    "andy87/yii2-generator" : ">=1.2.4"
 },
 ```
 <small>repositories</small>
@@ -269,7 +269,7 @@ public function actionListCruds()
         "type"                  : "package",
         "package"               : {
             "name"                  : "andy87/yii2-generator",
-            "version"               : "1.1.4",
+            "version"               : "1.2.4",
             "source"                : {
                 "type"                  : "git",
                 "reference"             : "master",
@@ -290,3 +290,6 @@ public function actionListCruds()
 * ***1.1.3*** 
   * Обновил описание
   * Добавил пакетную генерацию(из коробки)
+
+* ***1.2.4*** 
+  * Стайлинг/Update : код, группировка use, комментарии
