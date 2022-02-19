@@ -158,11 +158,11 @@ class Generator
      *
      * @throws InvalidConfigException
      */
-    public function generateModelArray( array $tableNameList, string $ns = self::DEFAULT_NS_MODELS )
+    public function generateModelArray( array $tableNameList, string $ns = self::DEFAULT_NS_MODELS, ?string $baseClass = self::DEFAULT_MODEL_PARENT_CLASS )
     {
         foreach ( $tableNameList as $tableName )
         {
-            $this->generateModel( $ns, $tableName );
+            $this->generateModel( $ns, $tableName, $baseClass );
         }
     }
 
