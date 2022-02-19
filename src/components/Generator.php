@@ -3,12 +3,7 @@
 namespace andy87\yii2_generator\components;
 
 use Yii;
-use yii\{
-    helpers\Inflector,
-    base\InvalidConfigException,
-    web\Controller,
-    db\ActiveRecord
-};
+use yii\{gii\CodeFile, helpers\Inflector, base\InvalidConfigException, web\Controller, db\ActiveRecord};
 use yii\gii\generators\{
     model\Generator as GeneratorModel,
     crud\Generator as GeneratorCrud
@@ -32,6 +27,9 @@ class Generator
 
     const DEFAULT_CRUD_PARENT_CONTROLLER = Controller::class;
     const DEFAULT_MODEL_PARENT_CLASS     = ActiveRecord::class;
+
+    /** @var array Замена в контенте генерируемого файла */
+    public array $replace = [];
 
 
 
@@ -158,7 +156,7 @@ class Generator
      *
      * @throws InvalidConfigException
      */
-    public function generateModelArray( array $tableNameList, string $ns = self::DEFAULT_NS_MODELS, ?string $baseClass = self::DEFAULT_MODEL_PARENT_CLASS )
+    public function generateModelArray( array $tableNameList, string $ns = self::DEFAULT_NS_MODELS, ?string $baseClass = self::DEFAULT_MODEL_PARENT_CLASS  )
     {
         foreach ( $tableNameList as $tableName )
         {
@@ -204,11 +202,16 @@ class Generator
     /**
      * Генерация файлов и уведомление в консоль о результате
      *
-     * @param array $files Список файлов для генерации
+     * @param CodeFile[] $files Список файлов для генерации
      */
     protected function processGenerate(array $files )
     {
-        foreach ( $files as $file ) {
+        foreach ( $files as $file )
+        {
+            if ( !empty($this->replace['from']) && !empty($this->replace['to']) ) {
+                $file->content = str_replace( $this->replace['from'], $this->replace['to'], $file->content );
+            }
+
             $this->displayIndo( ( ( $file->save() ) ? ' + OK ' : ' - ERROR ' ) . $file->path );
         }
     }

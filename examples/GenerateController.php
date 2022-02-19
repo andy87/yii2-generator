@@ -7,10 +7,7 @@ use yii\{
     helpers\Inflector,
     base\InvalidConfigException
 };
-use andy87\yii2_generator\{
-    components\Generator,
-    controllers\GeneratorController
-};
+use andy87\yii2_generator\components\Generator;
 
 /**
  *  Class `GenerateController`
@@ -19,7 +16,7 @@ use andy87\yii2_generator\{
  *
  * @package console\controllers
  */
-class GenerateController extends GeneratorController
+class GenerateController extends \andy87\yii2_generator\controllers\GeneratorController
 {
     // Constants
 
@@ -32,11 +29,34 @@ class GenerateController extends GeneratorController
     ];
 
 
+    /**
+     *
+     */
+    public function init()
+    {
+        parent::init();
+
+        // Список того что надо заменить в нгенерируемом файле
+        $this->generator->replace['from'] = [
+            '::className()',
+            'public static function tableName()',
+            'public function rules()',
+            'public function attributeLabels()',
+        ];
+
+        // Список того на что надо заменить в нгенерируемом файле
+        $this->generator->replace['to'] = [
+            '::class',
+            'public static function tableName(): string',
+            'public function rules(): array',
+            'public function attributeLabels(): array',
+        ];
+    }
 
     // Methods
 
     /**
-     * Генерация одной модели
+     * Генерация одной Model
      *
      * php yii generate/model
      *
@@ -54,7 +74,7 @@ class GenerateController extends GeneratorController
     }
 
     /**
-     * Генерация одного круд'а (CRUD)
+     * Генерация одного CRUD
      *
      * php yii generate/crud
      *
@@ -76,7 +96,7 @@ class GenerateController extends GeneratorController
 
 
     /**
-     * Пакетная генерация Model'ей
+     * Пакетная генерация Model's
      *
      * php yii generate/list-models
      *
@@ -90,7 +110,8 @@ class GenerateController extends GeneratorController
         //Generate with custom params
         $this->generator->generateModelArray(
             self::TABLE_LIST,
-            ( $nameSpaceModelClass = 'common\\models\\some\\dir' ) // Default: common\\models
+            ( $nameSpaceModelClass = 'common\\models\\some\\dir' ), // Default: common\\models
+            ( $baseModelClass = CommonClass::class ) // Default: ActiveRecord::class
         );
     }
 
